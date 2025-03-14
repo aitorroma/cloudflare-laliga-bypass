@@ -1,0 +1,436 @@
+{
+  "name": "CloudFlare - Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "0cde9922-da02-47a3-a8da-4991a06bd1c7",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        -180
+      ],
+      "id": "266db870-d3e4-47a7-97be-59bd083aef42",
+      "name": "Webhook",
+      "webhookId": "0cde9922-da02-47a3-a8da-4991a06bd1c7"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f3a89eaa-5200-468e-9b02-5bdddbb75f29",
+              "leftValue": "={{ $json.accesible }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -40,
+        -180
+      ],
+      "id": "887b0326-ebf4-42e8-a554-574f59e04b88",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "86de15bb-f86d-48ed-9e5a-75342a99698e",
+              "name": "email",
+              "value": "tu email de cloudflare",
+              "type": "string"
+            },
+            {
+              "id": "6dee1469-32c0-4cfb-8b16-823fdb3a538c",
+              "name": "GlobalAPI",
+              "value": "Tu api global de cloudflare",
+              "type": "string"
+            },
+            {
+              "id": "49367d0d-7864-4d9a-be90-250790c7f2f9",
+              "name": "domain",
+              "value": "={{ $json.body.domain }}",
+              "type": "string"
+            },
+            {
+              "id": "2c0e6122-4636-42ec-a40f-e7a611eb6fc6",
+              "name": "accesible",
+              "value": "={{ $json.body.accessible }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -240,
+        -180
+      ],
+      "id": "e345fd06-2d6d-4248-bb5a-54c96b76771f",
+      "name": "Configuration"
+    },
+    {
+      "parameters": {
+        "url": "https://api.cloudflare.com/client/v4/zones",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.domain }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Auth-Email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "name": "X-Auth-Key",
+              "value": "={{ $json.GlobalAPI }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        280,
+        120
+      ],
+      "id": "c8f399fa-8201-4a7b-9855-daaf03bcea3a",
+      "name": "ZoneID"
+    },
+    {
+      "parameters": {
+        "url": "https://api.cloudflare.com/client/v4/zones",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.domain }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Auth-Email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "name": "X-Auth-Key",
+              "value": "={{ $json.GlobalAPI }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        280,
+        -200
+      ],
+      "id": "32de54b6-76e8-4eb0-bef2-9cd3db9ef7bf",
+      "name": "ZoneID1"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://api.cloudflare.com/client/v4/zones/{{ $('ZoneID').item.json.result[0].id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Auth-Email",
+              "value": "={{ $('Configuration').item.json.email }}"
+            },
+            {
+              "name": "X-Auth-Key",
+              "value": "={{ $('Configuration').item.json.GlobalAPI }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "paused",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        740,
+        120
+      ],
+      "id": "dfb7f8b5-83e7-46d4-99e6-5e512e609e65",
+      "name": "PauseCloudFlare"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.cloudflare.com/client/v4/zones/{{ $json.result[0].id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Auth-Email",
+              "value": "={{ $('Configuration').item.json.email }}"
+            },
+            {
+              "name": "X-Auth-Key",
+              "value": "={{ $('Configuration').item.json.GlobalAPI }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        520,
+        -200
+      ],
+      "id": "c998fc34-53f1-4040-94d5-765e632c8771",
+      "name": "ValidatePaused"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4144ee58-07e2-44c0-a7a3-148fa333e4ca",
+              "leftValue": "={{ $json.result.paused }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        740,
+        -200
+      ],
+      "id": "b79c0bfa-0ed0-41e0-b69c-0d82e92a7a2a",
+      "name": "If1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        -300
+      ],
+      "id": "07ef0eee-739a-472e-bb0a-a928044c05f0",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://api.cloudflare.com/client/v4/zones/{{ $('ValidatePaused').item.json.result.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Auth-Email",
+              "value": "={{ $('Configuration').item.json.email }}"
+            },
+            {
+              "name": "X-Auth-Key",
+              "value": "={{ $('Configuration').item.json.GlobalAPI }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "paused"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        -20
+      ],
+      "id": "18b24e34-2249-4d0a-993d-13cc601d1ea7",
+      "name": "EnableCloudflare"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuration": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "ZoneID1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ZoneID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ZoneID": {
+      "main": [
+        [
+          {
+            "node": "PauseCloudFlare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ZoneID1": {
+      "main": [
+        [
+          {
+            "node": "ValidatePaused",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ValidatePaused": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "EnableCloudflare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f2f5c94c-5e0b-41fe-9ec6-16d5b553e194",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "cP3ggLrHjavMo7Dg",
+  "tags": []
+}
