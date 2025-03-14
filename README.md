@@ -194,3 +194,7 @@ Si recibes advertencias del antivirus, puedes:
 - El script requiere conexión a Internet para funcionar
 - Asegúrate de tener los permisos necesarios para escribir en el directorio donde se ejecuta el script
 - En caso de problemas con el ejecutable en Windows, intenta ejecutar el script directamente con Python
+
+### Agradecimientos
+
+Un agradecimiento especial a [Oriol Rius](https://oriolrius.me) por su valiosa ayuda en la compilación para Windows en la creación del archivo cloudflare.spec.
