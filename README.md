@@ -1,3 +1,20 @@
+<div align="center">
+
+![[image-20210506104427925](https://t.me/aitorroma)](https://tva1.sinaimg.cn/large/008i3skNgy1gq8sv4q7cqj303k03kweo.jpg)
+
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/J3J64AN17)
+
+  
+  <br>
+
+  <a href="https://t.me/aitorroma">
+    <img src="https://img.shields.io/badge/Telegram-informational?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Badge"/>
+  </a>
+</div>
+</div>
+
+
 # Monitor de Estado de Cloudflare para Bloqueos de LaLiga
 
 Este proyecto proporciona una automatización para gestionar los bloqueos de Cloudflare durante las transmisiones de partidos de fútbol de LaLiga. El sistema monitorea automáticamente el estado de tu sitio web y gestiona la activación/desactivación de Cloudflare según sea necesario.
